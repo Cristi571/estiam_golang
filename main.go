@@ -6,17 +6,17 @@ import (
 	"fmt"
 	"os"
 	"strconv"
+	"dictionary/dictionary"
 )
 
 func main() {
-	// Create a map to store dictionary content
-	dictionary := make(map[string]string)
+	// Create a new instance of the dictionary from the package
+	d := dictionary.New()
 
 	// Set the app running status
 	var appRunning = true
 	// Make the app running loop
 	for appRunning {
-
 		// Store the menu oprions in an array
 		buttons := [5]int{0, 1, 2, 3, 4}
 		// Display menu navigation instructions for user
@@ -41,7 +41,6 @@ func main() {
 		}
 
 		// ---------------------------------------------------------------------
-		
 		// Convert the input text to an integer
 		nextStep, err := strconv.Atoi(inputText[:len(inputText)-2]) // Trim newline character
 		// Check if user printed an string typed valid integer
@@ -72,13 +71,13 @@ func main() {
 			fmt.Println("Exiting the application..")
 			appRunning = false
 		case 1:
-			actionAdd(dictionary, reader)
+			actionAdd(d, reader)
 		case 2:
-			actionDefine(dictionary, reader)
+			actionDefine(d, reader)
 		case 3:
-			actionRemove(dictionary, reader)
+			actionRemove(d, reader)
 		case 4:
-			actionList(dictionary)
+			actionList(d)
 			
 		}
 
@@ -93,7 +92,7 @@ func main() {
 
 // -----------------------------------------------------------------------------
 // Add new items to the dictionary (the key)
-func actionAdd(d map[string]string, reader *bufio.Reader) {
+func actionAdd(d *dictionary.Dictionary, reader *bufio.Reader) {
 	// Let user type the item name
 	fmt.Print("Enter a word to add: ")
 	word, err := reader.ReadString('\n')
@@ -112,14 +111,12 @@ func actionAdd(d map[string]string, reader *bufio.Reader) {
 	}
 	definition = definition[:len(definition)-2] // Trim newline character
 
-	// Add the new item with it's definition to the dictionary
-	d[word] = definition
-	fmt.Printf("Word '%s' added to the dictionary.\n", word)
+	d.Add(word, definition)
 }
 
 // -----------------------------------------------------------------------------
 // Get the definition of a given word
-func actionDefine(d map[string]string, reader *bufio.Reader) {
+func actionDefine(d *dictionary.Dictionary, reader *bufio.Reader) {
 	fmt.Print("Enter a word to define: ")
 	word, err := reader.ReadString('\n')
 	if err != nil {
@@ -128,17 +125,17 @@ func actionDefine(d map[string]string, reader *bufio.Reader) {
 	}
 	word = word[:len(word)-2] // Trim newline character
 
-	definition, found := d[word]
-	if found {
-		fmt.Printf("%s: %s\n", word, definition)
+	entry, err := d.Get(word)
+	if err != nil {
+		fmt.Println(err)
 	} else {
-		fmt.Printf("Word '%s' not found in the dictionary.\n", word)
+		fmt.Printf("Definition of '%s': %s\n", word, entry.Definition)
 	}
 }
 
 // -----------------------------------------------------------------------------
 // Remove an item from the dictionary
-func actionRemove(d map[string]string, reader *bufio.Reader) {
+func actionRemove(d *dictionary.Dictionary, reader *bufio.Reader) {
 	fmt.Print("Enter a word to remove: ")
 	word, err := reader.ReadString('\n')
 	if err != nil {
@@ -147,16 +144,20 @@ func actionRemove(d map[string]string, reader *bufio.Reader) {
 	}
 	word = word[:len(word)-2] // Trim newline character
 
-	delete(d, word)
-	fmt.Printf("Word '%s' removed from the dictionary.\n", word)
+	// delete(d, word)
+	d.Remove(word)
 }
 
 
 // -----------------------------------------------------------------------------
 // Display the dictionary content
-func actionList(d map[string]string) {
-	fmt.Println("Dictionary Content:")
-	for word, definition := range d {
-		fmt.Printf("%s: %s\n", word, definition)
+func actionList(d *dictionary.Dictionary) {
+	// Get the content of dictionary as key value pairs
+	words, entries := d.List()
+
+	fmt.Printf("Dictionary contains %d item(s).\n", len(words))
+	for _, word := range words {
+		entry := entries[word]
+		fmt.Printf("%s: %s\n", word, entry.Definition)
 	}
 }
