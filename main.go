@@ -10,8 +10,9 @@ import (
 )
 
 func main() {
+	filePath := "dictionary.json"
 	// Create a new instance of the dictionary from the package
-	d := dictionary.New()
+	d := dictionary.New(filePath)
 
 	// Set the app running status
 	var appRunning = true
