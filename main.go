@@ -22,8 +22,9 @@ func main() {
 		// Display menu navigation instructions for user
 		fmt.Println("+-------------------------------------+")
 		fmt.Println("1 : Add new item to dictionary")
-		fmt.Println("2 : Delete an item from the dictionary")
-		fmt.Println("3 : Display the dictionary content")
+		fmt.Println("2 : Get definition of a word")
+		fmt.Println("3 : Delete an item from the dictionary")
+		fmt.Println("4 : Display the dictionary content")
 		fmt.Println("0 : Quit the app")
 		fmt.Println("+-------------------------------------+")
 		
@@ -42,7 +43,6 @@ func main() {
 		// ---------------------------------------------------------------------
 		
 		// Convert the input text to an integer
-		// nextStep, err := strconv.Atoi(inputText)
 		nextStep, err := strconv.Atoi(inputText[:len(inputText)-2]) // Trim newline character
 		// Check if user printed an string typed valid integer
 		if err != nil {
@@ -72,13 +72,12 @@ func main() {
 			fmt.Println("Exiting the application..")
 			appRunning = false
 		case 1:
-			fmt.Println("Adding new item..")
 			actionAdd(dictionary, reader)
 		case 2:
-			fmt.Println("Removing item..")
-			actionRemove(dictionary, reader)
+			actionDefine(dictionary, reader)
 		case 3:
-			fmt.Println("Displaying dictionary content..")
+			actionRemove(dictionary, reader)
+		case 4:
 			actionList(dictionary)
 			
 		}
@@ -118,6 +117,24 @@ func actionAdd(d map[string]string, reader *bufio.Reader) {
 	fmt.Printf("Word '%s' added to the dictionary.\n", word)
 }
 
+// -----------------------------------------------------------------------------
+// Get the definition of a given word
+func actionDefine(d map[string]string, reader *bufio.Reader) {
+	fmt.Print("Enter a word to define: ")
+	word, err := reader.ReadString('\n')
+	if err != nil {
+		fmt.Println("Error reading input:", err)
+		return
+	}
+	word = word[:len(word)-2] // Trim newline character
+
+	definition, found := d[word]
+	if found {
+		fmt.Printf("%s: %s\n", word, definition)
+	} else {
+		fmt.Printf("Word '%s' not found in the dictionary.\n", word)
+	}
+}
 
 // -----------------------------------------------------------------------------
 // Remove an item from the dictionary
