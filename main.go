@@ -8,8 +8,12 @@ import (
 	"strconv"
 	"dictionary/dictionary"
 )
+// Define the new line lenght for different env and machines
+// 2 windows | 1 iOS
+var brLen int = 1
 
 func main() {
+	
 	filePath := "dictionary.json"
 	// Create a new instance of the dictionary from the package
 	d := dictionary.New(filePath)
@@ -43,7 +47,7 @@ func main() {
 
 		// ---------------------------------------------------------------------
 		// Convert the input text to an integer
-		nextStep, err := strconv.Atoi(inputText[:len(inputText)-2]) // Trim newline character
+		nextStep, err := strconv.Atoi(inputText[:len(inputText)-brLen]) // Trim newline character
 		// Check if user printed an string typed valid integer
 		if err != nil {
 			fmt.Println("/!\\ Please enter a valid number")
@@ -101,7 +105,7 @@ func actionAdd(d *dictionary.Dictionary, reader *bufio.Reader) {
 		fmt.Println("Error reading input:", err)
 		return
 	}
-	word = word[:len(word)-2] // Trim newline character
+	word = word[:len(word)-brLen] // Trim newline character
 
 	// Let the user give the definition of the item
 	fmt.Print("Enter the definition: ")
@@ -110,7 +114,7 @@ func actionAdd(d *dictionary.Dictionary, reader *bufio.Reader) {
 		fmt.Println("Error reading input:", err)
 		return
 	}
-	definition = definition[:len(definition)-2] // Trim newline character
+	definition = definition[:len(definition)-brLen] // Trim newline character
 
 	d.Add(word, definition)
 }
@@ -124,7 +128,7 @@ func actionDefine(d *dictionary.Dictionary, reader *bufio.Reader) {
 		fmt.Println("Error reading input:", err)
 		return
 	}
-	word = word[:len(word)-2] // Trim newline character
+	word = word[:len(word)-brLen] // Trim newline character
 
 	entry, err := d.Get(word)
 	if err != nil {
@@ -143,7 +147,7 @@ func actionRemove(d *dictionary.Dictionary, reader *bufio.Reader) {
 		fmt.Println("Error reading input:", err)
 		return
 	}
-	word = word[:len(word)-2] // Trim newline character
+	word = word[:len(word)-brLen] // Trim newline character
 
 	// delete(d, word)
 	d.Remove(word)
