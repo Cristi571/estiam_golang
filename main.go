@@ -140,9 +140,18 @@ func addWordHandler(w http.ResponseWriter, r *http.Request) {
 
 	// Extract word and definition from the request data
 	word := requestData["word"]
-	fmt.Printf("word : %s\n", word)
 	definition := requestData["definition"]
+	fmt.Printf("word : %s\n", word)
 	fmt.Printf("definition : %s\n", definition)
+
+	if word == "" {
+        http.Error(w, "Word is required", http.StatusBadRequest)
+        return
+    }
+	if definition == "" {
+        http.Error(w, "No definition was provided for '"+word+"'", http.StatusBadRequest)
+        return
+    }
 
 	// Add the word to the dictionary
 	result, err := dict.Add(word, definition)
@@ -151,6 +160,11 @@ func addWordHandler(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("Could not add word "+word+"."))
 		return
 	}
+	if err != nil {
+        log.Println("Error adding '"+word+"' to the dictionary:", err)
+        http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+        return
+    }
 	// Send a success response
 	w.Write([]byte(result))
 }
