@@ -41,10 +41,8 @@ func (d *Dictionary) getDataFromFile() error {
 				fmt.Println("Would you like to create the file now?")
 				fmt.Println("+-------------------------------------+")
 				fmt.Println("yes/y : Create the file")
-				fmt.Println("no/n : Do not create now")
 				fmt.Println("+-------------------------------------+")
 
-				fmt.Print("Your choice: ")
 				// Let the user to make a choice
 				fmt.Print("Your choice: ")
 				// Get the user input with a scanner that reads from os.Stdin
@@ -83,11 +81,12 @@ func (d *Dictionary) writeDataToFile() error {
 	return encoder.Encode(d.entries)
 }
 
-func (d *Dictionary) Add(word string, definition string) {
+func (d *Dictionary) Add(word string, definition string)(string, error) {
 	entry := Entry{Definition: definition}
 	d.entries[word] = entry
-	fmt.Printf("Word '%s' added to the dictionary.\n", word)
 	d.writeDataToFile()
+	// fmt.Printf("Word '%s' added to the dictionary.\n", word)
+	return "Word "+word+" added to the dictionary.", nil
 }
 
 func (d *Dictionary) Get(word string) (Entry, error) {
@@ -101,12 +100,13 @@ func (d *Dictionary) Get(word string) (Entry, error) {
 	return entry, nil
 }
 
-func (d *Dictionary) Remove(word string) {
+func (d *Dictionary) Remove(word string)(string, error) {
 	// Delete the word from the dictionary
 	delete(d.entries, word)
 	// Update dictionary data
 	d.writeDataToFile()
-	fmt.Printf("Word '%s' removed from the dictionary.\n", word)
+	// fmt.Printf("Word '%s' removed from the dictionary.\n", word)
+	return "Word "+word+" deleted from the dictionary.", nil
 }
 
 func (d *Dictionary) List() ([]string, map[string]Entry) {
