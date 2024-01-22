@@ -160,6 +160,11 @@ func getWordHandler(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	word := vars["word"]
 
+	if word == "" {
+        http.Error(w, "Please provide a word", http.StatusBadRequest)
+        return
+    }
+
 	if (strings.Replace(word, " ", "", -1) == "" || 
 		len(strings.Replace(word, " ", "", -1)) < 1) {
 		w.Write([]byte("Please enter a word."))
@@ -168,9 +173,16 @@ func getWordHandler(w http.ResponseWriter, r *http.Request) {
 
 	entry, err := dict.Get(word)
 	if err != nil {
-		http.Error(w, "Error getting word from dictionary", http.StatusInternalServerError)
-		return
+		log.Printf("Error getting word '%s' from dictionary.\n", word)
+		log.Println("Error message : ", err)
+        http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+        return
 	}
+
+	if entry == (dictionary.Entry{}) {
+        http.Error(w, "Word '"+word+"' not found in the dictionary.", http.StatusNotFound)
+        return
+    }
 
 	// Convert the entry to JSON and send it as the response
 	responseJSON, _ := json.Marshal(entry)
