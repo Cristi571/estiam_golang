@@ -1,4 +1,4 @@
-package logging
+package middlewares
 
 import (
 	"fmt"
@@ -28,12 +28,9 @@ func LoggingMiddleware(next http.Handler) http.Handler {
 	logger.Printf("Logging 1")
 
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		fmt.Printf("Method : [%s]\n", r.Method)
-		fmt.Printf("RequestURI : %s\n", r.RequestURI)
-		fmt.Printf("RemoteAddr : %s\n", r.RemoteAddr)
 
-		logger.Printf("Logging 2 [%s] %s %s", r.Method, r.RequestURI, r.RemoteAddr)
-
+		fmt.Printf("[%s] %s\n", r.Method, r.RequestURI)
+		logger.Printf("[%s] %s\n", r.Method, r.RequestURI)
 		// Serve the request to the next handler
 		next.ServeHTTP(w, r)
 
@@ -57,3 +54,36 @@ func (f *FlushableFile) Flush() {
 	f.File.Sync()
 	f.mu.Unlock()
 }
+
+
+/*
+
+
+
+// middlewares/logging.go
+package middlewares
+
+import (
+	// "fmt"
+	"log"
+	"net/http"
+	// "os"
+	"time"
+)
+
+// LoggingMiddleware is a middleware for logging requests
+func LoggingMiddleware(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		startTime := time.Now()
+
+		// Serve the request to the next handler
+		next.ServeHTTP(w, r)
+
+		// Log after handling the request
+		endTime := time.Now()
+		duration := endTime.Sub(startTime)
+
+		log.Printf("[%s] %s %s - %v", r.Method, r.RequestURI, r.RemoteAddr, duration)
+	})
+}
+*/

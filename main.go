@@ -4,14 +4,17 @@ package main
 import (
 	// "bufio"
 	"fmt"
+	"log"
+	"time"
+	"net/http"
 	"strings"
 	"encoding/json"
 	// "os"
 	// "strconv"
 	"dictionary/dictionary"
-	"dictionary/logging"
-	"net/http"
+	"dictionary/middlewares"
 	"github.com/gorilla/mux"
+	"github.com/dgrijalva/jwt-go"
 )
 // Define the new line lenght for different env and machines
 // 2 windows | 1 iOS
@@ -19,126 +22,54 @@ import (
 // Define a global dictionary instance
 var dict *dictionary.Dictionary
 
+// Define the user object structure
+type User struct {
+	Username string
+	Password string
+}
+
 func main() {
 	filePath := "dictionary.json"
 	// Create a new instance of the dictionary from the package
 	dict = dictionary.New(filePath)
 
 
-	// Create a new instance of the Gorilla Mux router
+	// Create a new router
 	router := mux.NewRouter()
 
 	// Use the logging middleware for all routes
-	router.Use(logging.LoggingMiddleware)
+	router.Use(middlewares.LoggingMiddleware)
+	router.Use(middlewares.AuthMiddleware)
 
-	// Define a handler for the home page
+	// Public routes
 	router.HandleFunc("/", homeHandler).Methods("GET")
 	router.HandleFunc("/home", homeHandler).Methods("GET")
-	// Define a handler for the about page
+	router.HandleFunc("/login", loginHandler).Methods("POST")
 	router.HandleFunc("/about", aboutHandler).Methods("GET")
 
-	// 1. Une pour ajouter une entrée au dictionnaire (POST)
-	router.HandleFunc("/addWord", addWordHandler).Methods("POST")
-	// 2. Une pour récupérer une définition par mot (GET)
-	router.HandleFunc("/getWord/{word}", getWordHandler).Methods("GET")
-	// 3. Une pour supprimer une entrée par mot (DELETE)
-	router.HandleFunc("/deleteWord/{word}", deleteWordHandler).Methods("DELETE")
-	
+	// Private routes
+	router.HandleFunc("/private/protected", protectedHandler).Methods("GET")
+	router.HandleFunc("/private/addWord", addWordHandler).Methods("POST")
+	router.HandleFunc("/private/getWord/{word}", getWordHandler).Methods("GET")
+	router.HandleFunc("/private/deleteWord/{word}", deleteWordHandler).Methods("DELETE")
 
-	// Start the server on port 8080
 	fmt.Println("Server listening on :8080...")
 	http.Handle("/", router)
 	http.ListenAndServe(":8080", nil)
 
 
-
-	/*
-	// Set the app running status
-	var appRunning = true
-	// Make the app running loop
-	for appRunning {
-		// Store the menu oprions in an array
-		buttons := [5]int{0, 1, 2, 3, 4}
-		// Display menu navigation instructions for user
-		fmt.Println("+-------------------------------------+")
-		fmt.Println("1 : Add new item to dictionary")
-		fmt.Println("2 : Get definition of a word")
-		fmt.Println("3 : Delete an item from the dictionary")
-		fmt.Println("4 : Display the dictionary content")
-		fmt.Println("0 : Quit the app")
-		fmt.Println("+-------------------------------------+")
-		
-		// ---------------------------------------------------------------------
-		// Let the user to make a choice
-		fmt.Print("Your choice: ")
-		// Get the user input with a scanner that reads from os.Stdin
-		reader := bufio.NewReader(os.Stdin)
-		// Get the text that was read
-		inputText, err := reader.ReadString('\n')
-		if err != nil {
-			fmt.Println("Error reading input:", err)
-			continue
-		}
-
-		// ---------------------------------------------------------------------
-		// Convert the input text to an integer
-		nextStep, err := strconv.Atoi(inputText[:len(inputText)-brLen]) // Trim newline character
-		// Check if user printed an string typed valid integer
-		if err != nil {
-			fmt.Println("/!\\ Please enter a valid number")
-			fmt.Printf("Error: %s\n", err)
-			continue	// prevent the app to continue this iteration
-		}
-
-		// ---------------------------------------------------------------------
-		// Check if the user choice is in the range of allowed values
-		validButton := false
-		for _, value := range buttons {
-			if value == nextStep {
-				validButton = true
-				break
-			}
-		}
-		if !validButton {
-			fmt.Printf("/!\\ %d is not in the menu. \nPlease retry.\n", nextStep)
-			continue
-		}
-
-		// ---------------------------------------------------------------------
-		// Perform actions based on user choice
-		switch nextStep {
-		case 0:
-			fmt.Println("Exiting the application..")
-			appRunning = false
-		case 1:
-			actionAdd(d, reader)
-		case 2:
-			actionDefine(d, reader)
-		case 3:
-			actionRemove(d, reader)
-		case 4:
-			actionList(d)
-			
-		}
-
-		// fmt.Printf("You entered: %s\n", inputText)
-	}
-	
-	fmt.Println("Application closed.")
-	*/
 }
 
-// Handler function for the home page
+// Home page - Handler
 func homeHandler(w http.ResponseWriter, r *http.Request) {
 	// Write a welcome message to the response writer
 	w.Write([]byte("Welcome to the home page!"))
 }
-// Handler function for the about page
+// About page - Handler
 func aboutHandler(w http.ResponseWriter, r *http.Request) {
 	// Write a message about the page to the response writer
 	w.Write([]byte("About us page"))
 }
-
 
 // Handler for the "addWord" route (POST method)
 func addWordHandler(w http.ResponseWriter, r *http.Request) {
@@ -167,7 +98,6 @@ func addWordHandler(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte(result))
 }
 
-
 // Handler for the "getWord" route (GET method)
 func getWordHandler(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
@@ -191,7 +121,6 @@ func getWordHandler(w http.ResponseWriter, r *http.Request) {
 	w.Write(responseJSON)
 }
 
-
 // Handler for the "deleteWord" route (DELETE method)
 func deleteWordHandler(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
@@ -213,6 +142,52 @@ func deleteWordHandler(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte(result))
 }
 
+func loginHandler(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("loginHandler")
+    // Check credentials (replace this with your authentication logic)
+    username := r.FormValue("username")
+    password := r.FormValue("password")
+
+    demoUser := User{
+        Username: "demo",
+        Password: "password123",
+    }
+
+    if username == demoUser.Username && password == demoUser.Password {
+        // Generate JWT token
+        token := jwt.New(jwt.SigningMethodHS256)
+        claims := token.Claims.(jwt.MapClaims)
+        claims["username"] = demoUser.Username
+        claims["exp"] = time.Now().Add(time.Hour * 1).Unix() // Token expires in 1 hour
+
+        tokenString, err := token.SignedString(middlewares.JWTSecret)
+        if err != nil {
+            log.Println("Error generating token:", err)
+            http.Error(w, "Error generating token", http.StatusInternalServerError)
+            return
+        }
+
+        // Include the token in the response headers
+        w.Header().Set("Authorization", "Bearer "+tokenString)
+        w.WriteHeader(http.StatusOK)
+        w.Write([]byte("Login successful"))
+
+        // Print token information for debugging
+        fmt.Println("Generated Token:", tokenString)
+    } else {
+        log.Println("Invalid credentials")
+        http.Error(w, "Invalid credentials", http.StatusUnauthorized)
+    }
+}
+
+
+
+
+func protectedHandler(w http.ResponseWriter, r *http.Request) {
+	// The request will only reach here if it passed the AuthMiddleware
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte("You are authorized!"))
+}
 
 
 
