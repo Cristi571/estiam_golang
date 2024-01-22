@@ -2,7 +2,8 @@
 package middlewares
 
 import (
-	// "fmt"
+	"fmt"
+	"log"
 	"net/http"
 	"strings"
 
@@ -13,27 +14,37 @@ var JWTSecret = []byte("Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3
 
 // AuthMiddleware checks the Authorization header for a valid JWT token
 func AuthMiddleware(next http.Handler) http.Handler {
+	fmt.Println("Auth middleware")
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		// Check if the request is for a public route (e.g., login)
-		if strings.HasPrefix(r.URL.Path, "/private/") {
-			// Extract the JWT token from the Authorization header
-			tokenString := extractToken(r)
+		// Extract the JWT token from the Authorization header
+		tokenString := extractToken(r)
 
-			if tokenString == "" {
-				http.Error(w, "Unauthorized: Missing token", http.StatusUnauthorized)
-				return
-			}
+		if tokenString == "" {
+			log.SetPrefix("WARNING: ")
+			log.SetFlags(log.Ldate | log.Ltime)
+			log.Println("Unauthorized: Missing token")
 
-			// Validate the JWT token
-			token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
-				return JWTSecret, nil
-			})
-
-			if err != nil || !token.Valid {
-				http.Error(w, "Unauthorized: Invalid token", http.StatusUnauthorized)
-				return
-			}
+			http.Error(w, "Unauthorized: Missing token", http.StatusUnauthorized)
+			return
 		}
+
+		// Validate the JWT token
+		token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+			return JWTSecret, nil
+		})
+
+		if err != nil || !token.Valid {
+			log.SetPrefix("WARNING: ")
+			log.SetFlags(log.Ldate | log.Ltime)
+			log.Println("Unauthorized: Invalid token")
+
+			http.Error(w, "Unauthorized: Invalid token", http.StatusUnauthorized)
+			return
+		}
+		log.SetPrefix("INFO: ")
+		log.SetFlags(log.Ldate | log.Ltime)
+		log.Println("Authentication succeeded.")
+		
 		next.ServeHTTP(w, r)
 	})
 }

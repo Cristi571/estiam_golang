@@ -29,37 +29,38 @@ type User struct {
 }
 
 func main() {
-	filePath := "dictionary.json"
-	// Create a new instance of the dictionary from the package
-	dict = dictionary.New(filePath)
+    filePath := "dictionary.json"
+    // Create a new instance of the dictionary from the package
+    dict = dictionary.New(filePath)
 
+    // Create a new router
+    router := mux.NewRouter()
 
-	// Create a new router
-	router := mux.NewRouter()
+    // Use the logging middleware for all routes
+    router.Use(middlewares.LoggingMiddleware)
 
-	// Use the logging middleware for all routes
-	router.Use(middlewares.LoggingMiddleware)
-	router.Use(middlewares.AuthMiddleware)
+    // Public routes
+    router.HandleFunc("/", homeHandler).Methods("GET")
+    router.HandleFunc("/home", homeHandler).Methods("GET")
+    router.HandleFunc("/login", loginHandler).Methods("POST")
+    router.HandleFunc("/about", aboutHandler).Methods("GET")
 
-	// Public routes
-	router.HandleFunc("/", homeHandler).Methods("GET")
-	router.HandleFunc("/home", homeHandler).Methods("GET")
-	router.HandleFunc("/login", loginHandler).Methods("POST")
-	router.HandleFunc("/about", aboutHandler).Methods("GET")
+    // Create a subrouter for private routes without /private prefix
+    privateRouter := router.PathPrefix("/").Subrouter()
+    privateRouter.Use(middlewares.AuthMiddleware)
 
-	// Private routes
-	router.HandleFunc("/private/protected", protectedHandler).Methods("GET")
-	router.HandleFunc("/private/addWord", addWordHandler).Methods("POST")
-	router.HandleFunc("/private/getWord/{word}", getWordHandler).Methods("GET")
-	router.HandleFunc("/private/deleteWord/{word}", deleteWordHandler).Methods("DELETE")
+    // Private routes without /private prefix
+    privateRouter.HandleFunc("/protected", protectedHandler).Methods("GET")
+    privateRouter.HandleFunc("/addWord", addWordHandler).Methods("POST")
+    privateRouter.HandleFunc("/getWord/{word}", getWordHandler).Methods("GET")
+    privateRouter.HandleFunc("/deleteWord/{word}", deleteWordHandler).Methods("DELETE")
 
-	fmt.Println("Server listening on :8080...")
-	http.Handle("/", router)
-	http.ListenAndServe(":8080", nil)
-
-
+    fmt.Println("Server listening on :8080...")
+    http.Handle("/", router)
+    http.ListenAndServe(":8080", nil)
 }
 
+// PUBLIC ROUTES
 // Home page - Handler
 func homeHandler(w http.ResponseWriter, r *http.Request) {
 	// Write a welcome message to the response writer
@@ -70,7 +71,63 @@ func aboutHandler(w http.ResponseWriter, r *http.Request) {
 	// Write a message about the page to the response writer
 	w.Write([]byte("About us page"))
 }
+// Allows the user to authenticate to server
+func loginHandler(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("loginHandler")
+	// Check if a session cookie exists, only browsers
+    _, err := r.Cookie("session")
+    if err == nil {
+        // Session cookie exists, user is already authenticated
+        log.Println("User is already authenticated")
+        http.Error(w, "User is already authenticated", http.StatusConflict)
+        return
+    }
 
+
+    // Check credentials (replace this with your authentication logic)
+    username := r.FormValue("username")
+    password := r.FormValue("password")
+
+    demoUser := User{
+        Username: "demo",
+        Password: "password123",
+    }
+
+    if username == demoUser.Username && password == demoUser.Password {
+        // Generate JWT token
+        token := jwt.New(jwt.SigningMethodHS256)
+        claims := token.Claims.(jwt.MapClaims)
+        claims["username"] = demoUser.Username
+        claims["exp"] = time.Now().Add(time.Hour * 24).Unix() // Token expires in 1 day
+
+        tokenString, err := token.SignedString(middlewares.JWTSecret)
+        if err != nil {
+            log.Println("Error generating token:", err)
+            http.Error(w, "Error generating token", http.StatusInternalServerError)
+            return
+        }
+
+        // Include the token in the response headers
+        w.Header().Set("Authorization", "Bearer "+tokenString)
+        w.WriteHeader(http.StatusOK)
+        w.Write([]byte("Login successful"))
+
+		// Set the token as a cookie to simulate a session
+        http.SetCookie(w, &http.Cookie{
+            Name:    "session",
+            Value:   tokenString,
+            Expires: time.Now().Add(time.Hour * 24),
+        })
+
+        // Print token information for debugging
+        fmt.Println("Generated Token:", tokenString)
+    } else {
+        log.Println("Invalid credentials")
+        http.Error(w, "Invalid credentials", http.StatusUnauthorized)
+    }
+}
+
+// PRIVATE ROUTES
 // Handler for the "addWord" route (POST method)
 func addWordHandler(w http.ResponseWriter, r *http.Request) {
 	// Parse the JSON request body into a map
@@ -142,135 +199,19 @@ func deleteWordHandler(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte(result))
 }
 
-func loginHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("loginHandler")
-    // Check credentials (replace this with your authentication logic)
-    username := r.FormValue("username")
-    password := r.FormValue("password")
-
-    demoUser := User{
-        Username: "demo",
-        Password: "password123",
-    }
-
-    if username == demoUser.Username && password == demoUser.Password {
-        // Generate JWT token
-        token := jwt.New(jwt.SigningMethodHS256)
-        claims := token.Claims.(jwt.MapClaims)
-        claims["username"] = demoUser.Username
-        claims["exp"] = time.Now().Add(time.Hour * 1).Unix() // Token expires in 1 hour
-
-        tokenString, err := token.SignedString(middlewares.JWTSecret)
-        if err != nil {
-            log.Println("Error generating token:", err)
-            http.Error(w, "Error generating token", http.StatusInternalServerError)
-            return
-        }
-
-        // Include the token in the response headers
-        w.Header().Set("Authorization", "Bearer "+tokenString)
-        w.WriteHeader(http.StatusOK)
-        w.Write([]byte("Login successful"))
-
-        // Print token information for debugging
-        fmt.Println("Generated Token:", tokenString)
-    } else {
-        log.Println("Invalid credentials")
-        http.Error(w, "Invalid credentials", http.StatusUnauthorized)
-    }
-}
 
 
 
-
+// Only for the authorisation middleware test purpose
 func protectedHandler(w http.ResponseWriter, r *http.Request) {
 	// The request will only reach here if it passed the AuthMiddleware
+	log.SetPrefix("INFO: ")
+	log.SetFlags(log.Ldate | log.Ltime)
+	log.Println("You are authorized!")
 	w.WriteHeader(http.StatusOK)
 	w.Write([]byte("You are authorized!"))
 }
 
-
-
-/*
-
-// -----------------------------------------------------------------------------
-// Add new items to the dictionary (the key)
-func actionAdd(d *dictionary.Dictionary, reader *bufio.Reader) {
-	// Let user type the item name
-	fmt.Print("Enter a word to add: ")
-	word, err := reader.ReadString('\n')
-	if err != nil {
-		fmt.Println("Error reading input:", err)
-		return
-	}
-	word = word[:len(word)-brLen] // Trim newline character
-
-	// Let the user give the definition of the item
-	fmt.Print("Enter the definition: ")
-	definition, err := reader.ReadString('\n')
-	if err != nil {
-		fmt.Println("Error reading input:", err)
-		return
-	}
-	definition = definition[:len(definition)-brLen] // Trim newline character
-
-	d.Add(word, definition)
-}
-
-
-
-
-
-
-
-// -----------------------------------------------------------------------------
-// Get the definition of a given word
-func actionDefine(d *dictionary.Dictionary, reader *bufio.Reader) {
-	fmt.Print("Enter a word to define: ")
-	word, err := reader.ReadString('\n')
-	if err != nil {
-		fmt.Println("Error reading input:", err)
-		return
-	}
-	word = word[:len(word)-brLen] // Trim newline character
-
-	entry, err := d.Get(word)
-	if err != nil {
-		fmt.Println(err)
-	} else {
-		fmt.Printf("Definition of '%s': %s\n", word, entry.Definition)
-	}
-}
-
-// -----------------------------------------------------------------------------
-// Remove an item from the dictionary
-func actionRemove(d *dictionary.Dictionary, reader *bufio.Reader) {
-	fmt.Print("Enter a word to remove: ")
-	word, err := reader.ReadString('\n')
-	if err != nil {
-		fmt.Println("Error reading input:", err)
-		return
-	}
-	word = word[:len(word)-brLen] // Trim newline character
-
-	// delete(d, word)
-	d.Remove(word)
-}
-
-
-// -----------------------------------------------------------------------------
-// Display the dictionary content
-func actionList(d *dictionary.Dictionary) {
-	// Get the content of dictionary as key value pairs
-	words, entries := d.List()
-
-	fmt.Printf("Dictionary contains %d item(s).\n", len(words))
-	for _, word := range words {
-		entry := entries[word]
-		fmt.Printf("%s: %s\n", word, entry.Definition)
-	}
-}
-*/
 
 
 
