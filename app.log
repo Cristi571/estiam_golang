@@ -1,71 +1,110 @@
-2024/01/22 22:15:25 Logging 1
-2024/01/22 22:15:36 Logging 1
-2024/01/23 09:36:04 Logging 1
-2024/01/23 09:36:11 Logging 1
-2024/01/23 09:36:17 Logging 1
-2024/01/23 09:39:12 Logging 1
-2024/01/23 09:39:19 Logging 1
-2024/01/23 09:39:41 Logging 1
-2024/01/23 09:41:45 Logging 1
-2024/01/23 09:41:58 Logging 1
-2024/01/23 09:42:15 Logging 1
-2024/01/23 09:42:22 Logging 1
-2024/01/23 09:43:27 Logging 1
-2024/01/23 09:43:37 Logging 1
-2024/01/23 09:43:50 Logging 1
-2024/01/23 09:43:55 Logging 1
-2024/01/23 09:43:58 Logging 1
-2024/01/23 09:49:01 Logging 1
-2024/01/23 09:49:08 Logging 1
-2024/01/23 09:50:17 Logging 1
-2024/01/23 09:52:07 Logging 1
-2024/01/23 09:54:10 Logging 1
-2024/01/23 09:55:14 Logging 1
-2024/01/23 09:57:10 Logging 1
-2024/01/23 09:57:56 Logging 1
-2024/01/23 09:58:30 Logging 1
-2024/01/23 10:02:13 Logging 1
-2024/01/23 10:02:28 Logging 1
-2024/01/23 10:03:14 Logging 1
-2024/01/23 10:04:37 Logging 1
-2024/01/23 10:04:44 Logging 1
-2024/01/23 10:04:50 Logging 1
-2024/01/23 10:05:06 Logging 1
-2024/01/23 10:05:10 Logging 1
-2024/01/23 10:11:21 Logging 1
-2024/01/23 10:12:42 Logging 1
-2024/01/23 10:13:32 Logging 1
-2024/01/23 10:13:36 Logging 1
-2024/01/23 10:13:41 Logging 1
-2024/01/23 10:34:37 Logging 1
-2024/01/23 10:43:00 Logging 1
-2024/01/23 10:44:35 Logging 1
-2024/01/23 10:44:57 Logging 1
-2024/01/23 10:48:50 Logging 1
-2024/01/23 10:58:30 Logging 1
-2024/01/23 11:04:44 Logging 1
-2024/01/23 11:05:07 Logging 1
-2024/01/23 11:05:34 Logging 1
-2024/01/23 11:06:02 Logging 1
-2024/01/23 11:06:21 Logging 1
-2024/01/23 11:06:34 Logging 1
-2024/01/23 11:06:42 Logging 1
-2024/01/23 11:07:04 Logging 1
-2024/01/23 11:07:16 Logging 1
-2024/01/23 11:07:38 Logging 1
-2024/01/23 12:45:16 Logging 1
-2024/01/23 12:48:00 Logging 1
-2024/01/23 14:41:48 Logging 1
-2024/01/23 15:00:02 Logging 1
-2024/01/23 15:00:22 Logging 1
-2024/01/23 15:03:18 Logging 1
-2024/01/23 15:03:32 Logging 1
-2024/01/23 15:12:47 Logging 1
-2024/01/23 15:14:57 Logging 1
-2024/01/23 15:15:02 Logging 1
-2024/01/23 15:15:13 Logging 1
-2024/01/23 15:17:09 Logging 1
-2024/01/23 15:24:34 Logging 1
-2024/01/23 15:26:08 Logging 1
-2024/01/23 15:32:39 Logging 1
-2024/01/23 15:32:50 Logging 1
+2024/01/25 12:31:37 [POST] /addToRedis [::1]:61685
+2024/01/25 12:36:37 [POST] /addToRedis [::1]:62734
+2024/01/25 12:36:57 [POST] /addToRedis [::1]:62734
+2024/01/25 12:37:42 [POST] /addToRedis [::1]:62824
+2024/01/25 12:46:26 [POST] /addToRedis [::1]:62824
+2024/01/25 12:48:54 [POST] /addToRedis [::1]:64108
+2024/01/25 12:51:13 [POST] /addToRedis [::1]:64640
+2024/01/25 12:52:45 [POST] /addToRedis [::1]:64953
+2024/01/25 12:54:20 [POST] /addToRedis [::1]:65158
+2024/01/25 12:54:31 [POST] /addToRedis [::1]:65158
+2024/01/25 12:54:38 [GET] /getFromRedis/lion [::1]:65158
+2024/01/25 12:56:58 [GET] /getFromRedis/lion [::1]:49218
+2024/01/25 12:57:49 [GET] /getFromRedis/lion [::1]:49458
+2024/01/25 13:02:17 [GET] /getFromRedis/lion [::1]:50398
+2024/01/25 13:28:39 [POST] /addToRedis [::1]:54432
+2024/01/25 13:29:54 [POST] /addToRedis [::1]:54432
+2024/01/25 13:30:20 [GET] /getFromRedis/lion [::1]:54432
+2024/01/25 13:30:57 [GET] /getFromRedis/lion [::1]:54432
+2024/01/25 13:31:12 [GET] /getFromRedis/lion [::1]:54631
+2024/01/25 13:32:41 [POST] /addToRedis [::1]:54631
+2024/01/25 13:47:49 [POST] /addToRedis [::1]:57160
+2024/01/25 13:56:26 [POST] /addToRedis [::1]:58352
+2024/01/25 13:56:40 [POST] /addToRedis [::1]:58352
+2024/01/25 13:56:59 [POST] /addToRedis [::1]:58352
+2024/01/25 13:57:27 [GET] /getFromRedis/lion [::1]:58352
+2024/01/25 13:57:32 [GET] /getFromRedis/lion [::1]:58352
+2024/01/25 13:57:34 [GET] /listRedis?page=1&pageSize=10 [::1]:58352
+2024/01/25 13:57:36 [GET] /listRedis?page=1&pageSize=10 [::1]:58352
+2024/01/25 14:07:24 [GET] /listRedis?page=1&pageSize=10 [::1]:60424
+2024/01/25 14:07:28 [DELETE] /deleteFromRedis/lion [::1]:60424
+2024/01/25 14:07:36 [GET] /listRedis?page=1&pageSize=10 [::1]:60424
+2024/01/25 14:14:04 [GET] / [::1]:61302
+2024/01/25 14:14:13 [GET] /home [::1]:61302
+2024/01/25 14:14:18 [GET] /about [::1]:61302
+2024/01/25 14:14:24 [POST] /login [::1]:61302
+2024/01/25 14:14:59 [POST] /login [::1]:61413
+2024/01/25 14:15:34 [POST] /login [::1]:61484
+2024/01/25 14:16:02 [POST] /login [::1]:61565
+2024/01/25 14:16:22 [POST] /login [::1]:61630
+2024/01/25 15:05:05 [POST] /login [::1]:61630
+2024/01/25 15:06:02 [POST] /login [::1]:64243
+2024/01/25 15:06:17 [POST] /login [::1]:64243
+2024/01/25 15:06:58 [GET] / [::1]:64243
+2024/01/25 15:07:03 [GET] /home [::1]:64243
+2024/01/25 15:07:06 [GET] /about [::1]:64243
+2024/01/25 15:08:25 [POST] /addToRedis [::1]:64243
+2024/01/25 15:08:30 [POST] /addToRedis [::1]:64243
+2024/01/25 15:09:05 [POST] /addToRedis [::1]:64243
+2024/01/25 15:09:26 [GET] /getFromRedis/lion [::1]:64243
+2024/01/25 15:09:53 [GET] /getFromRedis/cow [::1]:64243
+2024/01/25 15:11:07 [GET] /listRedis?page=1&pageSize=10 [::1]:64243
+2024/01/25 15:11:53 [POST] /addToRedis [::1]:64243
+2024/01/25 15:11:59 [GET] /getFromRedis/lion [::1]:64243
+2024/01/25 15:12:03 [GET] /listRedis?page=1&pageSize=10 [::1]:64243
+2024/01/25 15:12:12 [DELETE] /deleteFromRedis/lion [::1]:64243
+2024/01/25 15:12:40 [GET] /protected [::1]:64243
+2024/01/25 15:12:59 [POST] /addToRedis [::1]:64243
+2024/01/25 15:13:04 [POST] /addToRedis [::1]:64243
+2024/01/25 15:13:11 [POST] /addToRedis [::1]:64243
+2024/01/25 15:13:25 [POST] /addToRedis [::1]:64243
+2024/01/25 15:13:46 [POST] /addToRedis [::1]:64243
+2024/01/25 15:14:03 [POST] /addToRedis [::1]:64243
+2024/01/25 15:14:20 [POST] /addToRedis [::1]:64243
+2024/01/25 15:14:28 [POST] /addToRedis [::1]:64243
+2024/01/25 15:14:38 [POST] /addToRedis [::1]:64243
+2024/01/25 15:42:08 [POST] /addWord [::1]:64243
+2024/01/25 15:42:18 [POST] /addWord [::1]:64243
+2024/01/25 15:42:54 [POST] /addToRedis [::1]:64243
+2024/01/25 15:43:05 [GET] /getWord/lion [::1]:64243
+2024/01/25 15:45:00 [POST] /addToRedis [::1]:64243
+2024/01/25 15:45:26 [GET] /getFromRedis/lion [::1]:64243
+2024/01/25 15:46:01 [GET] /listRedis?page=1&pageSize=10 [::1]:64243
+2024/01/25 15:46:42 [GET] /listRedis?page=1&pageSize=2 [::1]:64243
+2024/01/25 15:46:56 [GET] /listRedis?page=1&pageSize=2 [::1]:64243
+2024/01/25 15:47:04 [GET] /listWords?page=1&pageSize=10 [::1]:64243
+2024/01/25 15:47:14 [GET] /listWords?page=1&pageSize=3 [::1]:64243
+2024/01/25 15:49:07 [GET] /listWords?page=1&pageSize=3 [::1]:51515
+2024/01/25 15:49:14 [GET] /listRedis?page=1&pageSize=2 [::1]:51515
+2024/01/25 15:50:20 [GET] /listRedis?page=1&pageSize=2 [::1]:51754
+2024/01/25 15:52:04 [GET] /listRedis?page=1&pageSize=2 [::1]:52322
+2024/01/25 15:53:22 [GET] /listRedis?page=1&pageSize=2 [::1]:52619
+2024/01/25 15:54:04 [GET] /listRedis?page=2&pageSize=2 [::1]:52619
+2024/01/25 15:59:07 [GET] /listRedis?page=2&pageSize=2 [::1]:53044
+2024/01/25 15:59:25 [GET] /listRedis?page=1&pageSize=2 [::1]:53044
+2024/01/25 16:02:53 [GET] /listRedis?page=2&pageSize=2 [::1]:53044
+2024/01/25 16:03:03 [GET] /listRedis?page=3&pageSize=2 [::1]:53044
+2024/01/25 16:03:09 [GET] /listRedis?page=4&pageSize=2 [::1]:53044
+2024/01/25 16:08:33 [GET] /listRedis?page=4&pageSize=2 [::1]:54166
+2024/01/25 16:10:10 [GET] /listRedis?page=4&pageSize=2 [::1]:54494
+2024/01/25 16:11:25 [GET] /listRedis?page=4&pageSize=2 [::1]:54677
+2024/01/25 16:11:33 [GET] /listRedis?page=1&pageSize=2 [::1]:54677
+2024/01/25 16:11:39 [GET] /listRedis?page=2&pageSize=2 [::1]:54677
+2024/01/25 16:11:44 [GET] /listRedis?page=3&pageSize=2 [::1]:54677
+2024/01/25 16:11:49 [GET] /listRedis?page=1&pageSize=2 [::1]:54677
+2024/01/25 16:20:50 [GET] /listRedis?page=1&pageSize=2 [::1]:56019
+2024/01/25 16:20:52 [GET] /listRedis?page=1&pageSize=2 [::1]:56019
+2024/01/25 16:20:53 [GET] /listRedis?page=1&pageSize=2 [::1]:56019
+2024/01/25 16:20:53 [GET] /listRedis?page=1&pageSize=2 [::1]:56019
+2024/01/25 16:22:01 [GET] /listRedis?page=1&pageSize=2 [::1]:56290
+2024/01/25 16:22:09 [GET] /listRedis?page=1&pageSize=3 [::1]:56290
+2024/01/25 16:22:20 [GET] /listRedis?page=2&pageSize=3 [::1]:56290
+2024/01/25 16:22:47 [GET] /listRedis?page=2&pageSize=4 [::1]:56290
+2024/01/25 16:22:53 [GET] /listRedis?page=1&pageSize=4 [::1]:56290
+2024/01/25 16:22:56 [GET] /listRedis?page=1&pageSize=5 [::1]:56290
+2024/01/25 16:23:44 [GET] /listRedis?page=1&pageSize=5 [::1]:56481
+2024/01/25 16:24:00 [GET] /listRedis?page=2&pageSize=5 [::1]:56481
+2024/01/25 16:24:09 [GET] /listRedis?page=1&pageSize=2 [::1]:56481
+2024/01/25 16:24:27 [GET] /listRedis?page=2&pageSize=2 [::1]:56481
+2024/01/25 16:40:26 [GET] /listRedis?page=2&pageSize=2 [::1]:56481
+2024/01/25 16:41:06 [GET] /listRedis?page=2&pageSize=0 [::1]:56481

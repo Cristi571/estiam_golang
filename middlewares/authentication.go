@@ -2,7 +2,7 @@
 package middlewares
 
 import (
-	"fmt"
+	_ "fmt"
 	"log"
 	"net/http"
 	"strings"
@@ -13,14 +13,15 @@ import (
 var JWTSecret = []byte("Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MDU5NDE0NjMsInVzZXJuYW1lIjoiZGVtbyJ9.mHkQYWTMPpVJgAaPLdGejty8rgsl6NL5581j5QCCrgo")
 
 // AuthMiddleware checks the Authorization header for a valid JWT token
-func AuthMiddleware(next http.Handler) http.Handler {
-	fmt.Println("Auth middleware")
+func Authentication(next http.Handler) http.Handler {
+	// log.Print("[PROTECTED] - ")
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		// Extract the JWT token from the Authorization header
 		tokenString := extractToken(r)
 
+		log.SetPrefix("\n[PROTECTED] | ")
 		if tokenString == "" {
-			log.SetPrefix("WARNING: ")
+			// log.SetPrefix("WARNING: ")
 			log.SetFlags(log.Ldate | log.Ltime)
 			log.Println("Unauthorized: Missing token")
 
@@ -34,16 +35,16 @@ func AuthMiddleware(next http.Handler) http.Handler {
 		})
 
 		if err != nil || !token.Valid {
-			log.SetPrefix("WARNING: ")
+			// log.SetPrefix("\n[PROTECTED] | ")
 			log.SetFlags(log.Ldate | log.Ltime)
 			log.Println("Unauthorized: Invalid token")
 
 			http.Error(w, "Unauthorized: Invalid token", http.StatusUnauthorized)
 			return
 		}
-		log.SetPrefix("INFO: ")
+		// log.SetPrefix("\n[PROTECTED]: ")
 		log.SetFlags(log.Ldate | log.Ltime)
-		log.Println("Authentication succeeded.")
+		log.Println("Authorized.")
 		
 		next.ServeHTTP(w, r)
 	})

@@ -1,4 +1,7 @@
 {
+    "buffalo": {
+        "Definition": "Big cow"
+    },
     "cow": {
         "Definition": "Mooooo"
     },
@@ -6,6 +9,6 @@
         "Definition": "Animal aquatique"
     },
     "lion": {
-        "Definition": "Rooaaarrrr"
+        "Definition": "Roaaring"
     }
 }
