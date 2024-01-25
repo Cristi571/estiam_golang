@@ -1,1 +1,11 @@
-{"":{"Definition":""},"buffalo":{"Definition":"big cow"},"dance":{"Definition":"qlsjdn lqsn dlknqs lknd"},"fish":{"Definition":"Animal aquatique"},"hors":{"Definition":"anima"},"lion":{"Definition":"roarrrrrrrrrr"},"move":{"Definition":"sqlkjd nqslknd lqsk nqs"}}
+{
+    "cow": {
+        "Definition": "Mooooo"
+    },
+    "fish": {
+        "Definition": "Animal aquatique"
+    },
+    "lion": {
+        "Definition": "Rooaaarrrr"
+    }
+}
